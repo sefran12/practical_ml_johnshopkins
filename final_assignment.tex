@@ -1,0 +1,322 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Final Assignment: Activity Prediction},
+  pdfauthor={Sefran12},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Final Assignment: Activity Prediction}
+\author{Sefran12}
+\date{}
+
+\begin{document}
+\maketitle
+
+\hypertarget{download-datasets}{%
+\subsection{Download datasets}\label{download-datasets}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.6     v purrr   0.3.4
+## v tibble  3.1.7     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidymodels)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages -------------------------------------- tidymodels 0.2.0 --
+\end{verbatim}
+
+\begin{verbatim}
+## v broom        0.8.0     v rsample      0.1.1
+## v dials        0.1.1     v tune         0.2.0
+## v infer        1.0.0     v workflows    0.2.6
+## v modeldata    0.1.1     v workflowsets 0.2.1
+## v parsnip      0.2.1     v yardstick    0.0.9
+## v recipes      0.2.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ----------------------------------------- tidymodels_conflicts() --
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## * Search for functions across packages at https://www.tidymodels.org/find/
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ranger)}
+
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"https://d396qusza40orc.cloudfront.net/predmachlearn/pml{-}training.csv"}\NormalTok{, }\AttributeTok{na =} \FunctionTok{c}\NormalTok{(}\StringTok{"NA"}\NormalTok{, }\StringTok{"\#DIV/0!"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `` -> `...1`
+\end{verbatim}
+
+\begin{verbatim}
+## Rows: 19622 Columns: 160
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr   (4): user_name, cvtd_timestamp, new_window, classe
+## dbl (150): ...1, raw_timestamp_part_1, raw_timestamp_part_2, num_window, rol...
+## lgl   (6): kurtosis_yaw_belt, skewness_yaw_belt, kurtosis_yaw_dumbbell, skew...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{assignment\_df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"https://d396qusza40orc.cloudfront.net/predmachlearn/pml{-}testing.csv"}\NormalTok{, }\AttributeTok{na =} \FunctionTok{c}\NormalTok{(}\StringTok{"NA"}\NormalTok{, }\StringTok{"\#DIV/0!"}\NormalTok{)) }\CommentTok{\# we can\textquotesingle{}t call it test data because we don\textquotesingle{}t have labels}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## Rows: 20 Columns: 160
+## -- Column specification
+## -------------------------------------------------------- Delimiter: "," chr
+## (3): user_name, cvtd_timestamp, new_window dbl (57): ...1,
+## raw_timestamp_part_1, raw_timestamp_part_2, num_window, rol... lgl (100):
+## kurtosis_roll_belt, kurtosis_picth_belt, kurtosis_yaw_belt, skewn...
+## i Use `spec()` to retrieve the full column specification for this data. i
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## * `` -> `...1`
+\end{verbatim}
+
+We see that we have a lot of variables, and a reasonably good amount of
+observations (19622/160 \textgreater{} 100, the heuristic for usual ML
+models on small datasets). Before doing any model development, we need
+to keep a test set apart. Also, notice many of the features are riddled
+with NAs, and that this dataset has a natural time ordering. I doubt
+we'd need to use time-series variables here (the test set does not let
+us). We will choose a train/dev/test splitting schema. The size of the
+dev and test sets will be chosen as for us to detect 1\% changes in our
+metric with 95\% coverage.
+
+Which metric? Let's see class imbalance:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{classe }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{table}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{prop.table}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## .
+##         A         B         C         D         E 
+## 0.2843747 0.1935073 0.1743961 0.1638977 0.1838243
+\end{verbatim}
+
+Some class imbalance. Probably a micro-averaged F1 score is a reasonable
+initial choice here. So approx 1000 examples will be enough probably.
+
+\hypertarget{train-dev-test-split}{%
+\subsection{Train-dev-test split}\label{train-dev-test-split}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# train test split}
+\NormalTok{train\_test\_split }\OtherTok{\textless{}{-}} \FunctionTok{initial\_split}\NormalTok{(df, }\AttributeTok{prop =} \DecValTok{1} \SpecialCharTok{{-}} \DecValTok{1000}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(df), }\AttributeTok{strata =}\NormalTok{ classe)}
+\NormalTok{train\_dev\_df }\OtherTok{\textless{}{-}} \FunctionTok{training}\NormalTok{(train\_test\_split)}
+\NormalTok{test\_df }\OtherTok{\textless{}{-}} \FunctionTok{testing}\NormalTok{(train\_test\_split)}
+
+\CommentTok{\# train into train dev split}
+\NormalTok{train\_dev\_split }\OtherTok{\textless{}{-}} \FunctionTok{initial\_split}\NormalTok{(train\_dev\_df, }\AttributeTok{prop =} \DecValTok{1} \SpecialCharTok{{-}} \DecValTok{1000}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(train\_dev\_df), }\AttributeTok{strata =}\NormalTok{ classe)}
+\NormalTok{train\_df }\OtherTok{\textless{}{-}} \FunctionTok{training}\NormalTok{(train\_dev\_split)}
+\NormalTok{dev\_df }\OtherTok{\textless{}{-}} \FunctionTok{testing}\NormalTok{(train\_dev\_split)}
+\end{Highlighting}
+\end{Shaded}
+
+Why train/dev/test? It's already well known by now but most high-powered
+ML models easily ``overfit'' to the data set used for optimizing choices
+of modeling. So we, when we can, need a consistent (sometimes unbiased)
+estimate of performance of the final model. Our dev set will be the one
+used to make modeling choices, and the final test set will be used just
+once, at the end, to estimate consistent measures of performance.
+
+\hypertarget{feature-engineering}{%
+\subsection{Feature engineering}\label{feature-engineering}}
+
+Let's do some feature engineering. For simplicity, I'll do these
+transformations: - NA's will be made categories - Columns with too many
+NA's, NA's will be filled with median values and an indicator variable
+will be made
+
+And we will start with a simple ranger random forest. If you look at the
+page for the dataset, you'll see that they had more or less 165000 data
+points and have achieved 99.41\% accuracy (macro average) and 0.994 F1
+score (micro average). I don't know if this was on testing, or just in
+training (probably training. The size of the dataset is too big for it
+to be testing). So we will probably need to aim, for a dataset of
+something less than 20000 instances, and proper testing on testing set,
+between 0.95 and 0.98 F1 score?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rf\_recipe }\OtherTok{\textless{}{-}}\NormalTok{ train\_df }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{recipe}\NormalTok{(classe }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{add\_role}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{...1}\StringTok{\textasciigrave{}}\SpecialCharTok{:}\NormalTok{num\_window, }\AttributeTok{new\_role =} \StringTok{"id variable"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{step\_indicate\_na}\NormalTok{(}\FunctionTok{all\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{step\_impute\_median}\NormalTok{(}\FunctionTok{all\_numeric\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{step\_novel}\NormalTok{(}\FunctionTok{all\_nominal\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{step\_unknown}\NormalTok{(}\FunctionTok{all\_nominal\_predictors}\NormalTok{())}
+
+\NormalTok{trained\_rf\_recipe }\OtherTok{\textless{}{-}}\NormalTok{ rf\_recipe }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{prep}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `na_ind_...1` -> `na_ind_`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{train\_data }\OtherTok{\textless{}{-}} \FunctionTok{bake}\NormalTok{(trained\_rf\_recipe, }\AttributeTok{new\_data =}\NormalTok{ train\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `na_ind_...1` -> `na_ind_`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dev\_data }\OtherTok{\textless{}{-}} \FunctionTok{bake}\NormalTok{(trained\_rf\_recipe, }\AttributeTok{new\_data =}\NormalTok{ dev\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `na_ind_...1` -> `na_ind_`
+\end{verbatim}
+
+\end{document}

@@ -1,0 +1,152 @@
+---
+title: 'Final Assignment: Activity Prediction'
+author: "Sefran12"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+## Download datasets
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(ranger)
+library(yardstick)
+
+df <- read_csv("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", na = c("NA", "#DIV/0!"))
+assignment_df <- read_csv("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", na = c("NA", "#DIV/0!")) # we can't call it test data because we don't have labels
+```
+
+We see that we have a lot of variables, and a reasonably good amount of observations (19622/160 > 100, the heuristic for usual ML models
+on small datasets). Before doing any model development, we need to keep a test set apart. Also, notice many of the features are riddled with NAs,
+and that this dataset has a natural time ordering. I doubt we'd need to use time-series variables here (the test set does not let us).
+We will choose a train/dev/test splitting schema. The size of the dev and test sets will be chosen as for us to detect 1% changes in our metric 
+with 95% coverage.
+
+Which metric? Let's see class imbalance:
+```{r}
+df$classe %>% table() %>% prop.table()
+```
+Some class imbalance. Probably a micro-averaged F1 score is a reasonable initial choice here.
+So approx 1000 examples will be enough probably.
+
+## Train-dev-test split
+
+```{r}
+# train test split
+train_test_split <- initial_split(df, prop = 1 - 1000/nrow(df), strata = classe)
+train_dev_df <- training(train_test_split)
+test_df <- testing(train_test_split)
+
+# train into train dev split
+train_dev_split <- initial_split(train_dev_df, prop = 1 - 1000/nrow(train_dev_df), strata = classe)
+train_df <- training(train_dev_split)
+dev_df <- testing(train_dev_split)
+```
+
+Why train/dev/test? It's already well known by now but most high-powered ML models
+easily "overfit" to the data set used for optimizing choices of modeling. So we,
+when we can, need a consistent (sometimes unbiased) estimate of performance of the final model.
+Our dev set will be the one used to make modeling choices, and the final test set
+will be used just once, at the end, to estimate consistent measures of performance.
+
+## Feature engineering
+
+Let's do some feature engineering. For simplicity, I'll do these transformations:
+
+- NA's will be made categories
+- Columns with too many NA's, NA's will be filled with median values and an indicator variable
+will be made
+
+And we will start with a simple ranger random forest. If you look at the
+page for the dataset, you'll see that they had more or less 165000 data points
+and have achieved 99.41% accuracy (macro average) and 0.994 F1 score (micro average).
+I don't know if this was on testing, or just in training (probably training. The size of the dataset is too
+big for it to be testing). So we will probably need to aim, for a dataset of something
+less than 20000 instances, and proper testing on testing set, between 0.95 and 0.98 F1 score?
+
+```{r warning=FALSE}
+rf_recipe <- train_df %>%
+    recipe(classe ~ .) %>% 
+    add_role(`...1`:num_window, new_role = "id variable") %>% 
+    step_filter_missing(threshold = 0.95) %>% 
+    step_zv() %>% 
+    step_indicate_na(all_predictors()) %>% 
+    step_novel(all_nominal_predictors()) %>% 
+    step_impute_median(all_numeric_predictors()) %>% 
+    step_unknown(all_nominal_predictors()) %>% 
+    step_rm(contains("skewness_yaw"), contains("kurtosis_yaw"))
+    
+trained_rf_recipe <- rf_recipe %>% prep()
+
+train_data <- bake(trained_rf_recipe, new_data = NULL)
+dev_data <- bake(trained_rf_recipe, new_data = dev_df) # we keep transforming test set until it is time
+```
+
+We can start modeling. We have some ways of going about with things:
+
+- Use OOB measures naturally given by RF as estimates of performance to choose the best model
+- Do crossvalidation to estimate best hyperparameters and also a first approximation to performance
+- Use the dev set to estimate performance
+
+Crossvalidation is too expensive so dev set only. I'll forego much of hyperparameter
+optimization seeing ranger is pretty good out of the box
+
+```{r}
+rf_mod <- rand_forest(
+    trees = 500,
+    mtry = 15,
+    min_n = 50,
+    mode = "classification"
+) %>% 
+    set_engine("ranger",
+               seed = 123,
+               importance = "permutation")
+
+rf_fit <- rf_mod %>% fit(classe ~ ., data = train_data)
+```
+As expected, the OOB accuracy is 1 - 0.0258, so 0.975. What about F1 score and the like?
+Let's look at the dev set.
+
+```{r}
+rf_fit %>% 
+    predict(dev_data) %>% 
+    bind_cols(classe = dev_data$classe) %>% 
+    f_meas(estimate = .pred_class, truth = classe)
+```
+
+Estimate of 0.9989 f1 macro 
+
+```{r}
+rf_fit %>% 
+    predict(dev_data) %>% 
+    bind_cols(classe = dev_data$classe) %>% 
+    f_meas(estimate = .pred_class, truth = classe,
+           estimator = "micro")
+```
+
+Well, with these results, except for leakage in the features, this is more or less
+a solved question. Maybe the dev set was useless. For completitude, let's look at the 
+test data.
+
+```{r}
+test_data <- trained_rf_recipe %>% bake(test_df)
+rf_fit %>% 
+    predict(test_data) %>% 
+    bind_cols(classe = test_data$classe) %>% 
+    f_meas(estimate = .pred_class, truth = classe,
+           estimator = "micro")
+```
+As expected, we have the same .999 f1 score (minus stochastic variations).
+Lets predict on the assignment set:
+
+```{r}
+assignment_data <- trained_rf_recipe %>% bake(assignment_df)
+rf_fit %>% 
+    predict(assignment_data) %>% 
+    print(n = Inf)
+```
+
